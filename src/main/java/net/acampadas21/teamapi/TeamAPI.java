@@ -13,7 +13,7 @@ public class TeamAPI extends JavaPlugin {
 
     public static TeamAPI plugin;
     public static final Logger logger = Logger.getLogger("Minecraft");
-    public final TeamAPIPlayerListener playerListener = new TeamAPIPlayerListener(this);
+    public TeamAPIPlayerListener playerListener;
     private static TeamManager tm;
     private Executor myExecutor;
     public static boolean signalOn;
@@ -28,6 +28,7 @@ public class TeamAPI extends JavaPlugin {
     	signalOn = false;
  //       FileConfiguration config = this.getConfig();
     	tm = new TeamManager(this);
+    	playerListener = new TeamAPIPlayerListener(this);
         myExecutor = new Executor(tm);
         getCommand("team").setExecutor(myExecutor);
         getCommand("test").setExecutor(myExecutor);
