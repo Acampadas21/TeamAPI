@@ -11,7 +11,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class TeamAPI extends JavaPlugin {
 
-    public static TeamAPI plugin;
     public static final Logger logger = Logger.getLogger("Minecraft");
     public TeamAPIPlayerListener playerListener;
     private static TeamManager tm;
@@ -20,7 +19,7 @@ public class TeamAPI extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        TeamAPI.logger.log(Level.INFO, "TeamAPI v{0}  is now disabled", plugin.getDescription().getVersion());
+        TeamAPI.logger.log(Level.INFO, "TeamAPI v{0}  is now disabled", getDescription().getVersion());
     }
 
     @Override
@@ -32,7 +31,7 @@ public class TeamAPI extends JavaPlugin {
         myExecutor = new Executor(tm);
         getCommand("team").setExecutor(myExecutor);
         getCommand("test").setExecutor(myExecutor);
-        TeamAPI.logger.log(Level.INFO, "TeamAPI v{0} has been enabled.", plugin.getDescription().getVersion());
+        TeamAPI.logger.log(Level.INFO, "TeamAPI v{0} has been enabled.", getDescription().getVersion());
     }
     
     //////////////////
