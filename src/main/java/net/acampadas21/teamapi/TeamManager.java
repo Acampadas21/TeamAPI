@@ -1,18 +1,23 @@
 package net.acampadas21.teamapi;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.acampadas21.teamapi.groups.DBTeam;
 import net.acampadas21.teamapi.groups.Team;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-
-import couk.Adamki11s.SQL.SyncSQL;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class TeamManager {
 
@@ -20,24 +25,51 @@ public class TeamManager {
 	
 	// In the "leader" row 1 means that the player is the leader. Any other value means the opposite.
 	
-	private static SyncSQL db;
-	private static TeamAPI plugin;
-	private static File f;
+	private FileConfiguration config = null;
+	private File configF = null;
+	private TeamAPI plugin;
+	
+	private HashMap<String, Team> teams;
 
 	public TeamManager(TeamAPI instance) {
 		plugin = instance;
-		dbInit();
+		teams = new HashMap<String, Team>();
+	}
+	
+	private void buildhm(){
+		
 	}
 
-	private void dbInit(){
-		try {
-			f = new File(plugin.getDataFolder() + "database.db");
-			db = new SyncSQL(f);
-			db.initialise();
-			db.closeConnection();
-		} catch (Exception e) {
-			throw new Error("Can't connect to the database");
-		}
+	private void reloadConfig() {
+	    if (configF == null) {
+	    configF = new File(plugin.getDataFolder(), "teams.yml");
+	    }
+	    config = YamlConfiguration.loadConfiguration(configF);
+	 
+	    // Look for defaults in the jar
+	    InputStream defConfigStream = plugin.getResource("teams_default.yml");
+	    if (defConfigStream != null) {
+	        YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+	        config.setDefaults(defConfig);
+	    }
+	}
+
+	private FileConfiguration getCustomConfig() {
+	    if (config == null) {
+	        reloadConfig();
+	    }
+	    return config;
+	}
+	
+	private void save() {
+	    if (config == null || configF == null) {
+	    return;
+	    }
+	    try {
+	        config.save(configF);
+	    } catch (IOException ex) {
+	        Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Could not save config to " + customConfigFile, ex);
+	    }
 	}
 	
 	/**
@@ -46,10 +78,7 @@ public class TeamManager {
 	 * @return True if exists a team with that name
 	 */
 	public boolean isTeam(String name) {
-		db.refreshConnection();
-		boolean b = db.doesTableExist(name);
-		db.closeConnection();
-		return b;
+		return config.contains("teams." + name);
 	}
 
 	/**
