@@ -40,7 +40,7 @@ public class TeamAPI extends JavaPlugin {
 
     /**
      * Gets how many teams are registered.
-     * @return The number of teams
+     * @return The number of teams 
      */
     public int howManyTeams() {
         return tm.listTeams().length;

@@ -43,7 +43,7 @@ public class Executor implements CommandExecutor {
 			} else if (args[0].equalsIgnoreCase("tp")) {
 				if (args[1] != null) {
 					if (tm.isTeam(args[1])) {
-						tm.getTeamByName(args[1]).transport(p.getLocation());
+						tm.getTeamByName(args[1]).teleport(p.getLocation());
 					}
 				}
 			}
